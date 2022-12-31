@@ -1,0 +1,95 @@
+package clothingstore;
+
+import java.util.Scanner;
+
+public class ClothingStore {
+    public static void main(String[] args) {
+        try (Scanner scanner = new Scanner(System.in)) {
+			Clothing[] clothing = {
+			    new Shirt("Small", "Red", 10),
+			    new Shirt("Medium", "Blue", 5),
+			    new Shirt("Large", "Green", 8),
+			    new Shirt("X-Large", "Yellow", 3),
+			    new Pants("Small", "Black", 12),
+			    new Pants("Medium", "Gray", 7),
+			    new Pants("Large", "Brown", 9),
+			    new Pants("X-Large", "Beige", 4)
+			};
+
+			System.out.println("Welcome to the Clothing Store!");
+			while (true) {
+			    System.out.println("Enter the type, size, color, and quantity of the clothing item you would like to purchase (e.g. 'Shirt Small Red 2'):");
+			    String input = scanner.nextLine();
+			    String[] parts = input.split(" ");
+			    String type = parts[0];
+			    String size = parts[1];
+			    String color = parts[2];
+			    int quantity = Integer.parseInt(parts[3]);
+
+			    Clothing selectedItem = null;
+			    for (Clothing item : clothing) {
+			        if (item.getType().equals(type) && item.getSize().equals(size) && item.getColor().equals(color) && item.getQuantity() >= quantity) {
+			            selectedItem = item;
+			            break;
+			        }
+			    }
+
+			    if (selectedItem == null) {
+			        System.out.println("We're sorry, we don't have that item in the requested size and color.");
+			    } else {
+			        selectedItem.setQuantity(selectedItem.getQuantity() - quantity);
+			        System.out.println("Thank you for your purchase!");
+			    }
+			}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+}
+
+class Clothing {
+    protected String type;
+    protected String size;
+    protected String color;
+    protected int quantity;
+
+    public Clothing(String type, String size, String color, int quantity) {
+        this.type = type;
+        this.size = size;
+        this.color = color;
+        this.quantity = quantity;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+}
+
+class Shirt extends Clothing {
+    public Shirt(String size, String color, int quantity) {
+        super("Shirt", size, color, quantity);
+    }
+}
+
+class Pants extends Clothing {
+    public Pants(String size, String color, int quantity) {
+        super("Pants", size, color, quantity);
+    }
+}
