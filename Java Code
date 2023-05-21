@@ -1,0 +1,157 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+public class ClothingStoreApp {
+    private Map<String, List<String>> categories;
+    private Map<String, Map<String, List<String>>> items;
+
+    public ClothingStoreApp() {
+        categories = new HashMap<>();
+        categories.put("men", createSubCategories());
+        categories.put("women", createSubCategories());
+        categories.put("kids", createSubCategories());
+
+        items = new HashMap<>();
+        for (String category : categories.keySet()) {
+            items.put(category, createItems());
+        }
+    }
+
+    private List<String> createSubCategories() {
+        List<String> subCategories = new ArrayList<>();
+        subCategories.add("pants");
+        subCategories.add("shirts");
+        subCategories.add("shoes");
+        subCategories.add("bathing suits");
+        subCategories.add("accessories");
+        return subCategories;
+    }
+
+    private Map<String, List<String>> createItems() {
+        Map<String, List<String>> subCategoryItems = new HashMap<>();
+
+        List<String> pantsItems = new ArrayList<>();
+        pantsItems.add("Blue");
+        pantsItems.add("Black");
+        pantsItems.add("Gray");
+        pantsItems.add("Beige");
+        pantsItems.add("Green");
+        subCategoryItems.put("pants", pantsItems);
+
+        List<String> shirtsItems = new ArrayList<>();
+        shirtsItems.add("White");
+        shirtsItems.add("Red");
+        shirtsItems.add("Pink");
+        shirtsItems.add("Yellow");
+        shirtsItems.add("Purple");
+        subCategoryItems.put("shirts", shirtsItems);
+
+        List<String> shoesItems = new ArrayList<>();
+        shoesItems.add("Brown");
+        shoesItems.add("Blue");
+        shoesItems.add("Black");
+        shoesItems.add("White");
+        shoesItems.add("Gray");
+        subCategoryItems.put("shoes", shoesItems);
+
+        List<String> bathingSuitsItems = new ArrayList<>();
+        bathingSuitsItems.add("Red");
+        bathingSuitsItems.add("Blue");
+        bathingSuitsItems.add("Black");
+        bathingSuitsItems.add("Pink");
+        bathingSuitsItems.add("Green");
+        subCategoryItems.put("bathing suits", bathingSuitsItems);
+
+        List<String> accessoriesItems = new ArrayList<>();
+        accessoriesItems.add("Gold");
+        accessoriesItems.add("Silver");
+        accessoriesItems.add("Rose Gold");
+        accessoriesItems.add("Black");
+        accessoriesItems.add("White");
+        subCategoryItems.put("accessories", accessoriesItems);
+
+        return subCategoryItems;
+    }
+
+    private void displayCategories() {
+        System.out.println("Welcome to the Clothing Store!");
+        System.out.println("Available categories:");
+
+        for (String category : categories.keySet()) {
+            System.out.println("- " + category);
+        }
+    }
+
+    private void displaySubCategories(String category) {
+        List<String> subCategories = categories.get(category);
+        System.out.println("Sub-categories available in " + category + ":");
+
+        for (String subCategory : subCategories) {
+            System.out.println("- " + subCategory);
+        }
+    }
+
+    private void displayItems(String category, String subCategory) {
+        Map<String, List<String>> subCategoryItems = items.get(category);
+        List<String> itemColors = subCategoryItems.get(subCategory);
+
+        System.out.println("Items available in " + subCategory + ":");
+
+        for (String color : itemColors) {
+            System.out.println("- " + color);
+        }
+    }
+
+    private void orderItem(String category, String subCategory, String color) {
+        System.out.println("You ordered the following item:");
+        System.out.println("Category: " + category);
+        System.out.println("Sub-category: " + subCategory);
+        System.out.println("Color: " + color);
+        // Add your order processing logic here
+    }
+
+    public void run() {
+        displayCategories();
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter a category: ");
+        String category = scanner.nextLine();
+
+        if (categories.containsKey(category)) {
+            displaySubCategories(category);
+
+            System.out.print("Enter a sub-category: ");
+            String subCategory = scanner.nextLine();
+
+            Map<String, List<String>> subCategoryItems = items.get(category);
+            if (subCategoryItems.containsKey(subCategory)) {
+                displayItems(category, subCategory);
+
+                System.out.print("Enter a color: ");
+                String color = scanner.nextLine();
+
+                List<String> itemColors = subCategoryItems.get(subCategory);
+                if (itemColors.contains(color)) {
+                    orderItem(category, subCategory, color);
+                } else {
+                    System.out.println("Invalid color!");
+                }
+            } else {
+                System.out.println("Invalid sub-category!");
+            }
+        } else {
+            System.out.println("Invalid category!");
+        }
+
+        scanner.close();
+    }
+
+    public static void main(String[] args) {
+        ClothingStoreApp app = new ClothingStoreApp();
+        app.run();
+    }
+}
