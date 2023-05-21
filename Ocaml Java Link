@@ -1,0 +1,39 @@
+(* Add the necessary CSV library imports *)
+open Csv
+open Printf
+(* Function to convert an item to a CSV row *)
+let item_to_csv_row item =
+  [item.color]
+ (* Function to convert a CSV row to an item *)
+let csv_row_to_item row =
+  match row with
+  | [color] -> { color }
+  | _ -> failwith "Invalid CSV row format"
+(* Read the clothing store data from a CSV file *)
+let read file =
+  let input = open_in file in
+  let csv_data = Csv.of_channel input in
+  let categories =
+    Csv.fold_left
+      (fun acc row ->
+        match row with
+        | category_str :: subcategory_str :: color :: _ ->
+            let category = parse_category category_str in
+            let subcategory = parse_subcategory subcategory_str in
+            let item = csv_row_to_item [color] in
+            (category, subcategory, [item]) :: acc
+        | _ -> failwith "Invalid CSV row format")
+      []
+      csv_data
+  in
+  close_in input;
+  categories
+(* Create a new item and save it to the CSV file *)
+let create file category subcategory color =
+  let item = create_item color in
+  let csv_row = [string_of_category category; string_of_subcategory subcategory] @ item_to_csv_row item in
+  let output = open_out_gen [Open_creat; Open_append] 0o666 file in
+  let formatter = Format.formatter_of_out_channel output in
+  Csv.output_record formatter csv_row;
+  Format.pp_print_flush formatter ();
+  close_out output
